@@ -1,0 +1,29 @@
+$main-color: #4caf50;
+$second-color: #2196f3;
+$background-color: #f5f5f5;
+$text-color: #333;
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  color: $text-color;
+  font-weight: 600;
+  background-color: $background-color;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+  padding: 1rem;
+}
