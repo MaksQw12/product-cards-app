@@ -1,48 +1,57 @@
 import { FaHeart, FaTrashAlt } from 'react-icons/fa';
-import { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './productCard.module.scss';
 
-const ProductCard = () => {
-  const [liked, setLiked] = useState(false);
+interface CardProps {
+  id: number;
+  name: string;
+  imageUrl: string;
+  status: string;
+  gender: string;
+  liked: boolean;
+  onLike: (id: number) => void;
+  onDelete: (id: number) => void;
+}
+
+const ProductCard: React.FC<CardProps> = ({
+  id,
+  name,
+  imageUrl,
+  status: _status,
+  gender: _gender,
+  liked,
+  onLike,
+  onDelete,
+}) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate('/product-details');
+    navigate(`/product-details/${id}`);
   };
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setLiked(!liked);
+    onLike(id); // Теперь состояние лайка будет обновляться через store
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-
-    console.log('Удаление продукта');
+    onDelete(id);
   };
 
   return (
     <div className={styles['product-card']} onClick={handleCardClick}>
-      <img
-        src="https://via.placeholder.com/300x200"
-        alt="Product"
-        className={styles['product-image']}
-      />
+      <img src={imageUrl} alt="Product" className={styles['product-image']} />
       <div className={styles['product-description']}>
-        <p>
-          Привет, меня зовут Максим и я работаю в сфере разработки. Привет, меня зовут Максим и я
-          работаю в сфере разработки.Привет, меня зовут Максим и я работаю в сфере разработки.
-          Привет, меня зовут Максим и я работаю в сфере разработки. Привет, меня зовут Максим и я
-          работаю в сфере разработки.Привет, меня зовут Максим и я работаю в сфере разработки.
-        </p>
+        <p>{name}</p>
       </div>
       <div className={styles['icon-container']}>
         <FaHeart
           className={`${styles['like-icon']} ${liked ? styles['liked'] : ''}`}
           onClick={handleLikeClick}
         />
-        <FaTrashAlt className={styles['delete-icon']} onClick={handleDeleteClick} />{' '}
+        <FaTrashAlt className={styles['delete-icon']} onClick={handleDeleteClick} />
       </div>
     </div>
   );
