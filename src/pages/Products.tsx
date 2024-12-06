@@ -31,39 +31,67 @@ const Products = () => {
     }
   }, [setProducts, products.length, page]);
 
-  const filteredProducts = products
-    .filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (filterType === 'all' || (filterType === 'favorites' && product.liked)),
-    )
-    .slice((page - 1) * PRODUCTS_PER_PAGE, page * PRODUCTS_PER_PAGE);
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (filterType === 'all' || (filterType === 'favorites' && product.liked)),
+  );
+
+  const filteredAndPaginatedProducts = filteredProducts.slice(
+    (page - 1) * PRODUCTS_PER_PAGE,
+    page * PRODUCTS_PER_PAGE,
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
   return (
     <div className={styles['products-content']}>
       <FilterBoard />
 
       <div className={styles['products-area']}>
-        <div className={styles['products-grid']}>
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              imageUrl={product.image}
-              status={product.status}
-              gender={product.gender}
-              liked={product.liked}
-              onLike={toggleLike}
-              onDelete={deleteProduct}
-            />
-          ))}
-        </div>
+        {filterType === 'favorites' && filteredAndPaginatedProducts.length === 0 ? (
+          <div className={styles['no-favorites']}>Вы ещё ничего не добавили в избранное</div>
+        ) : (
+          <div className={styles['products-grid']}>
+            {filteredAndPaginatedProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                imageUrl={product.image}
+                status={product.status}
+                gender={product.gender}
+                liked={product.liked}
+                onLike={toggleLike}
+                onDelete={deleteProduct}
+              />
+            ))}
+          </div>
+        )}
 
-        <div className={styles['pagination']}>
-          <button onClick={() => setPage(Math.max(page - 1, 1))}>Предыдущая</button>
-          <span className={styles['page-number']}>{page}</span>
-          <button onClick={() => setPage(page + 1)}>Следующая</button>
-        </div>
+        {!(filterType === 'favorites' && filteredAndPaginatedProducts.length === 0) && (
+          <div className={styles['pagination']}>
+            <button onClick={handlePrevPage} disabled={page === 1}>
+              ←
+            </button>
+            <span className={styles['page-number']}>{page}</span>
+            <button onClick={handleNextPage} disabled={page === totalPages}>
+              →
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

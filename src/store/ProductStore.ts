@@ -15,12 +15,14 @@ interface ProductsState {
   totalPages: number;
   searchQuery: string;
   filterType: string;
+  selectedProduct: Product | null;
   setProducts: (products: Product[], totalPages: number) => void;
   setPage: (page: number) => void;
   toggleLike: (id: number) => void;
   deleteProduct: (id: number) => void;
   setSearchQuery: (query: string) => void;
   setFilterType: (filter: string) => void;
+  setSelectedProduct: (product: Product) => void;
 }
 
 export const useProductStore = create<ProductsState>((set) => ({
@@ -29,6 +31,7 @@ export const useProductStore = create<ProductsState>((set) => ({
   totalPages: 1,
   searchQuery: '',
   filterType: 'all',
+  selectedProduct: null,
 
   setProducts: (products, totalPages) =>
     set((state) => ({
@@ -55,4 +58,5 @@ export const useProductStore = create<ProductsState>((set) => ({
   setSearchQuery: (query) => set(() => ({ searchQuery: query })),
 
   setFilterType: (filter) => set(() => ({ filterType: filter })),
+  setSelectedProduct: (product) => set(() => ({ selectedProduct: product })),
 }));

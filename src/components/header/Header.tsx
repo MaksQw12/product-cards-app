@@ -6,10 +6,10 @@ const Header = () => {
   return (
     <header className={styles['header-content']}>
       <Link to="/products" className={styles['text-link']}>
-        Продукты
+        Карточки товара
       </Link>
       <Link to="/create-products" className={styles['text-link']}>
-        Создать продукт
+        Создать карточку
       </Link>
     </header>
   );

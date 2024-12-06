@@ -2,7 +2,7 @@ import { FaHeart, FaTrashAlt } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './productCard.module.scss';
-
+import { useProductStore } from '../../store/ProductStore';
 interface CardProps {
   id: number;
   name: string;
@@ -25,14 +25,15 @@ const ProductCard: React.FC<CardProps> = ({
   onDelete,
 }) => {
   const navigate = useNavigate();
-
+  const setSelectedProduct = useProductStore((state) => state.setSelectedProduct);
   const handleCardClick = () => {
+    setSelectedProduct({ id, name, image: imageUrl, status: _status, gender: _gender, liked });
     navigate(`/product-details/${id}`);
   };
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onLike(id); // Теперь состояние лайка будет обновляться через store
+    onLike(id);
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
