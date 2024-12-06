@@ -1,8 +1,9 @@
-import styles from './filterBoard.module.scss';
 import { useProductStore } from '../../store/ProductStore';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-const FilterBoard = () => {
+import styles from './filterBoard.module.scss';
+
+export const FilterBoard = () => {
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const { setSearchQuery, filterType, setFilterType, setPage } = useProductStore();
 
@@ -14,9 +15,9 @@ const FilterBoard = () => {
     return () => clearTimeout(timer);
   }, [debouncedQuery, setSearchQuery]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setDebouncedQuery(e.target.value);
-  };
+  }, []);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterType(e.target.value);
@@ -57,5 +58,3 @@ const FilterBoard = () => {
     </div>
   );
 };
-
-export default FilterBoard;

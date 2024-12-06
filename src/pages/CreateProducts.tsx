@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../styles/createProduct.module.scss';
 import { useProductStore } from '../store/ProductStore';
 
-const CreateProducts = () => {
+import styles from '../styles/createProduct.module.scss';
+
+export const CreateProducts = () => {
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
   const [status, setStatus] = useState('');
@@ -132,5 +133,3 @@ const CreateProducts = () => {
     </div>
   );
 };
-
-export default CreateProducts;

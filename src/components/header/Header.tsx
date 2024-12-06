@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import styles from './header.module.scss';
 
-const Header = () => {
+export const Header = () => {
   return (
     <header className={styles['header-content']}>
       <Link to="/products" className={styles['text-link']}>
@@ -14,5 +14,3 @@ const Header = () => {
     </header>
   );
 };
-
-export default Header;

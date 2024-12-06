@@ -1,9 +1,10 @@
-import styles from '../styles/detailProduct.module.scss';
 import { useProductStore } from '../store/ProductStore';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-const DetailProduct = () => {
+import styles from '../styles/detailProduct.module.scss';
+
+export const DetailProduct = () => {
   const navigate = useNavigate();
   const selectedProduct = useProductStore((state) => state.selectedProduct);
   const setSelectedProduct = useProductStore((state) => state.setSelectedProduct);
@@ -48,5 +49,3 @@ const DetailProduct = () => {
     </div>
   );
 };
-
-export default DetailProduct;

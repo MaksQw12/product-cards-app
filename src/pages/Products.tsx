@@ -1,60 +1,36 @@
-import styles from '../styles/products.module.scss';
-import FilterBoard from '../components/filterBoard/FilterBoard';
-import ProductCard from '../components/ProductCard/ProductCard';
+import { useEffect, useMemo } from 'react';
+import { fetchProducts } from '../api/Products';
 import { useProductStore } from '../store/ProductStore';
-import { useEffect } from 'react';
-import axios from 'axios';
+import { useFilteredProducts } from '../hooks/useFilteredProducts';
+import { usePagination } from '../hooks/usePagination';
 
-const Products = () => {
+import { FilterBoard } from '../components/filterBoard/FilterBoard';
+import { ProductCard } from '../components/ProductCard/ProductCard';
+
+import styles from '../styles/products.module.scss';
+
+export const Products = () => {
   const PRODUCTS_PER_PAGE = 6;
-  const {
-    products,
-    page,
-    setProducts,
-    setPage,
-    toggleLike,
-    deleteProduct,
-    searchQuery,
-    filterType,
-  } = useProductStore();
+  const { products, setProducts, page, toggleLike, deleteProduct, filterType } = useProductStore();
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await axios(`https://rickandmortyapi.com/api/character?page=${page}`);
-      const { data } = response;
-
-      setProducts(data.results, data.info.pages);
+      const { results, pages } = await fetchProducts(page);
+      setProducts(results, pages);
     };
 
     if (products.length === 0) {
       fetchProduct();
     }
-  }, [setProducts, products.length, page]);
+  }, [setProducts, page]);
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (filterType === 'all' || (filterType === 'favorites' && product.liked)),
+  const { filteredProducts } = useFilteredProducts();
+  const { totalPages, handleNextPage, handlePrevPage } = usePagination(filteredProducts);
+
+  const filteredAndPaginatedProducts = useMemo(
+    () => filteredProducts.slice((page - 1) * PRODUCTS_PER_PAGE, page * PRODUCTS_PER_PAGE),
+    [filteredProducts, page],
   );
-
-  const filteredAndPaginatedProducts = filteredProducts.slice(
-    (page - 1) * PRODUCTS_PER_PAGE,
-    page * PRODUCTS_PER_PAGE,
-  );
-
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-
-  const handleNextPage = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
 
   return (
     <div className={styles['products-content']}>
@@ -62,7 +38,7 @@ const Products = () => {
 
       <div className={styles['products-area']}>
         {filterType === 'favorites' && filteredAndPaginatedProducts.length === 0 ? (
-          <div className={styles['no-favorites']}>Вы ещё ничего не добавили в избранное</div>
+          <div className={styles['no-favorites']}>Вы ещё ничего не добавили в избранное 💗</div>
         ) : (
           <div className={styles['products-grid']}>
             {filteredAndPaginatedProducts.map((product) => (
@@ -80,7 +56,7 @@ const Products = () => {
             ))}
           </div>
         )}
-
+        {/* ну да я идиот что не вынес пагинацию в компонент */}
         {!(filterType === 'favorites' && filteredAndPaginatedProducts.length === 0) && (
           <div className={styles['pagination']}>
             <button onClick={handlePrevPage} disabled={page === 1}>
@@ -96,5 +72,3 @@ const Products = () => {
     </div>
   );
 };
-
-export default Products;

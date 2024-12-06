@@ -1,8 +1,10 @@
-import { FaHeart, FaTrashAlt } from 'react-icons/fa';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FaHeart, FaTrashAlt } from 'react-icons/fa';
+import { useProductCardActions } from '../../hooks/useProductCardActions';
+import { useLikeAndDelete } from '../../hooks/useLikeAndDelete';
+
 import styles from './productCard.module.scss';
-import { useProductStore } from '../../store/ProductStore';
+
 interface CardProps {
   id: number;
   name: string;
@@ -14,7 +16,7 @@ interface CardProps {
   onDelete: (id: number) => void;
 }
 
-const ProductCard: React.FC<CardProps> = ({
+export const ProductCard: React.FC<CardProps> = ({
   id,
   name,
   imageUrl,
@@ -24,27 +26,13 @@ const ProductCard: React.FC<CardProps> = ({
   onLike,
   onDelete,
 }) => {
-  const navigate = useNavigate();
-  const setSelectedProduct = useProductStore((state) => state.setSelectedProduct);
-  const handleCardClick = () => {
-    const productData = { id, name, image: imageUrl, status: _status, gender: _gender, liked };
-    localStorage.setItem('selectedProduct', JSON.stringify(productData));
-    setSelectedProduct(productData);
-    navigate(`/product-details/${id}`);
-  };
-
-  const handleLikeClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onLike(id);
-  };
-
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete(id);
-  };
+  const { handleCardClick } = useProductCardActions();
+  const { handleLikeClick, handleDeleteClick } = useLikeAndDelete(id, onLike, onDelete);
 
   return (
-    <div className={styles['product-card']} onClick={handleCardClick}>
+    <div
+      className={styles['product-card']}
+      onClick={() => handleCardClick(id, name, imageUrl, _status, _gender, liked)}>
       <img src={imageUrl} alt="Product" className={styles['product-image']} />
       <div className={styles['product-description']}>
         <p>{name}</p>
@@ -59,5 +47,3 @@ const ProductCard: React.FC<CardProps> = ({
     </div>
   );
 };
-
-export default ProductCard;
