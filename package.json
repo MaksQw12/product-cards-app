@@ -6,7 +6,7 @@
   "homepage": "https://MaksQw12.github.io/product-cards-app",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc && vite build --mode production && cp ./dist/index.html ./dist/404.html",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
