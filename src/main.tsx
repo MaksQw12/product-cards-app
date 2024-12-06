@@ -8,7 +8,7 @@ import './styles/global.scss';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/product-cards-app">
       <App />
     </BrowserRouter>
   </StrictMode>,
