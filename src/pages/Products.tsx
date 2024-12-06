@@ -7,7 +7,16 @@ import axios from 'axios';
 
 const Products = () => {
   const PRODUCTS_PER_PAGE = 6;
-  const { products, page, setProducts, setPage, toggleLike, deleteProduct } = useProductStore();
+  const {
+    products,
+    page,
+    setProducts,
+    setPage,
+    toggleLike,
+    deleteProduct,
+    searchQuery,
+    filterType,
+  } = useProductStore();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -15,7 +24,6 @@ const Products = () => {
       const { data } = response;
 
       setProducts(data.results, data.info.pages);
-      console.log(data.results, data.info.pages);
     };
 
     if (products.length === 0) {
@@ -23,17 +31,20 @@ const Products = () => {
     }
   }, [setProducts, products.length, page]);
 
-  const displayedProducts = products.slice(
-    (page - 1) * PRODUCTS_PER_PAGE,
-    page * PRODUCTS_PER_PAGE,
-  );
+  const filteredProducts = products
+    .filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (filterType === 'all' || (filterType === 'favorites' && product.liked)),
+    )
+    .slice((page - 1) * PRODUCTS_PER_PAGE, page * PRODUCTS_PER_PAGE);
   return (
     <div className={styles['products-content']}>
       <FilterBoard />
 
       <div className={styles['products-area']}>
         <div className={styles['products-grid']}>
-          {displayedProducts.map((product) => (
+          {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id}

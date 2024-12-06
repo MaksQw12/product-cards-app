@@ -39,20 +39,3 @@
     accent-color: black;
   }
 }
-
-.checkbox-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.checkbox-label {
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  input {
-    accent-color: #2196f3;
-  }
-}
