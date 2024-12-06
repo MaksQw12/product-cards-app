@@ -6,8 +6,10 @@
     <title>Redirecting...</title>
     <script type="text/javascript">
       var path = window.location.pathname;
-      var newPath = '/product-cards-app' + path;
-      window.location.replace(newPath);
+      if (!path.startsWith('/product-cards-app')) {
+        path = '/product-cards-app' + path;
+      }
+      window.location.replace(path);
     </script>
   </head>
   <body>
