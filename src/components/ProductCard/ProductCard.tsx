@@ -27,7 +27,9 @@ const ProductCard: React.FC<CardProps> = ({
   const navigate = useNavigate();
   const setSelectedProduct = useProductStore((state) => state.setSelectedProduct);
   const handleCardClick = () => {
-    setSelectedProduct({ id, name, image: imageUrl, status: _status, gender: _gender, liked });
+    const productData = { id, name, image: imageUrl, status: _status, gender: _gender, liked };
+    localStorage.setItem('selectedProduct', JSON.stringify(productData));
+    setSelectedProduct(productData);
     navigate(`/product-details/${id}`);
   };
 

@@ -1,10 +1,19 @@
 import styles from '../styles/detailProduct.module.scss';
 import { useProductStore } from '../store/ProductStore';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const DetailProduct = () => {
   const navigate = useNavigate();
   const selectedProduct = useProductStore((state) => state.selectedProduct);
+  const setSelectedProduct = useProductStore((state) => state.setSelectedProduct);
+
+  useEffect(() => {
+    const storedProduct = localStorage.getItem('selectedProduct');
+    if (storedProduct && !selectedProduct) {
+      setSelectedProduct(JSON.parse(storedProduct));
+    }
+  }, [setSelectedProduct, selectedProduct]);
 
   if (!selectedProduct) {
     return <div className={styles['product-detail']}>Продукт не найден</div>;
